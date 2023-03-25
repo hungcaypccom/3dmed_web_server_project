@@ -5,14 +5,23 @@ from app.service import auth_service, user_service, role_service, info_data_serv
 from app.hans3d import han3d_service
 from app.auto_download.auto_download_service import AutoDownloadService
 from datetime import date
+from app.service.auth_service import AuthService
+from app.schema import RegisterSchema
 
 router = APIRouter()
 import json
 
-
-
-roles = ["user", "admin"]
-
+admin = RegisterSchema(
+    username= "admin1",
+    password= "admin",
+    name= "admin",
+    Date_start= "23-01-2023",
+    Date_end= "23-10-2023",
+    profile= "str",
+    phone_number= "str",
+    adress= "str",
+    role= "admin"
+)
 
 
 
@@ -28,6 +37,10 @@ def init_app():
     @app.on_event("startup")
     async def startup():
         await db.create_all()
+        await AuthService.generate_role()
+        #await AuthService.register_service(admin)
+        return admin
+
         
 
     @app.on_event("shutdown")
@@ -129,7 +142,10 @@ async def f():
 async def f():
     return await AutoDownloadService.auto_login()"""
 
-
+#test autodownload
+@router.get("/test")
+async def f():
+    return await AuthService.register_service(admin)
 
 app.include_router(router)
 

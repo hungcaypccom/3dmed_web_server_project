@@ -99,12 +99,13 @@ class AuthService:
         await UsersRepository.update_password(forgot_password.username, pwd_context.hash(forgot_password.new_password))
 
 
-# Generate roles manually
-async def generate_role():
-    _role = await RoleRepository.find_by_list_role_name(["admin", "user"])
-    if not _role:
-        await RoleRepository.create_list(
-            [Role(id=str(uuid4()), role_name="admin"), Role(id=str(uuid4()), role_name="user")])
+    # Generate roles manually
+    @staticmethod
+    async def generate_role():
+        _role = await RoleRepository.find_by_list_role_name(["admin", "user"])
+        if not _role:
+            await RoleRepository.create_list(
+                [Role(id=str(uuid4()), role_name="admin"), Role(id=str(uuid4()), role_name="user")])
   
 
 
