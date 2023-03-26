@@ -43,7 +43,7 @@ class Function:
                     "birthday" : infoData["birthday"], 
                     "phone" : infoData["phone"], 
                     "sex" : infoData["sex"],
-                    "status": True,
+                    "status": False,
                     "downloadable": False
                 }
                 await Function.write_infoData_by_account(data = data, account= account)

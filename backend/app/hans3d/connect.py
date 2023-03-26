@@ -30,7 +30,7 @@ class Connect:
         try:
             async with session.get(url, params = param, cookies = s_cookies, allow_redirects=True, timeout = timeout) as response:
                 print(session)
-                f = await aiofiles.open(name, mode='wb')
+                f = await aiofiles.open(name+".zip", mode='wb')
                 await f.write(await response.read())
                 await f.close()
             elapsed = time.perf_counter() - s

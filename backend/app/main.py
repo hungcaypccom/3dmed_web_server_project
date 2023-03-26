@@ -142,6 +142,14 @@ async def f():
 async def f():
     return await AutoDownloadService.auto_login()"""
 
+@router.get("/sync")
+async def f():
+    return await AutoDownloadService.sync_infoData()
+
+@router.get("/downloaddata")
+async def f():
+    return await AutoDownloadService.download()
+
 #test autodownload
 @router.get("/test")
 async def f():
