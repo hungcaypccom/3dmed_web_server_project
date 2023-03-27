@@ -65,9 +65,9 @@ def init_app():
         await db.create_all()
         await AuthService.generate_role()
         #await AuthService.register_service(admin_reg)
-        task1 = asyncio.create_task(auto_compare())
+        """ task1 = asyncio.create_task(auto_compare())
         task2 = asyncio.create_task(auto_download())
-        asyncio.gather(task1, task2)
+        asyncio.gather(task1, task2)"""
        
 
         

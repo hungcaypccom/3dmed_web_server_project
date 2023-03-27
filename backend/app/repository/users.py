@@ -7,6 +7,7 @@ from sqlalchemy.future import select
 
 from app.config import db, commit_rollback
 from app.model.users import Users
+from app.model.person import Person
 from app.repository.base_repo import BaseRepo
 
 

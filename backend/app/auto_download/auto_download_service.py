@@ -30,7 +30,7 @@ class AutoDownloadService:
             if await function.Function.download_by_uploadTimeStr(download.uploadTimeStr, download.accountNo, config.timeout_download_data):
                await info_data_service.InFoDataService.update_status_downloadable(download.uploadTimeStr,True,True)
 
-            
+   
             
 
 

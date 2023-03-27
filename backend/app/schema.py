@@ -31,7 +31,18 @@ class RegisterSchema(BaseModel):
    
     # phone number validation
 
-    
+class UpdateSchema(BaseModel):
+
+    # mapping request data to class entity table    
+    username: str
+    password: str
+    name: str
+    Date_start: str
+    Date_end: str
+    profile: str
+    phone_number: str
+    adress: str
+   
 
 class LoginSchema(BaseModel):
     username: str

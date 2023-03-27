@@ -76,6 +76,8 @@ class AuthService:
             return JWTRepo(data={"username": _username.username}).generate_token()
         raise HTTPException(status_code=404, detail={"status": "Not Found", "message": "Username not Found"})
 
+
+
     @staticmethod
     async def logins_service_admin(login: LoginSchema):
         _username = await UsersRepository.find_by_username(login.username)

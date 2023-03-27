@@ -16,7 +16,8 @@ class UserService:
 
     @staticmethod
     async def get_user_profile_user(username):
-        query = select(Users.username, 
+        query = select(Users.username,
+                       Users.password, 
                         Person.name, 
                         Person.Date_start,
                         Person.Date_end,
