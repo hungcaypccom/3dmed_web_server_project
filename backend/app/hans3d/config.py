@@ -28,3 +28,5 @@ class Config:
         "accessSource": "pc"
     }
 
+    datafolder = "datas"
+

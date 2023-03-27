@@ -21,7 +21,7 @@ class AutoDownloadService:
         for account in accounts:
             task = asyncio.create_task(function.Function.sync_infoData(account.username, config.timeout_request_data*len(accounts)))
             tasks.append(task)
-            print (await asyncio.gather(*tasks))
+            await asyncio.gather(*tasks)
         
     @staticmethod
     async def download():

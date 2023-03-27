@@ -7,6 +7,7 @@ from app.service.user_service import UserService
 from app.service import role_service
 from app.schema import ResponseSchema, RegisterSchema, LoginSchema, ForgotPasswordSchema
 from app.service.auth_service import AuthService
+from app.service import info_data_service
 
 router = APIRouter(
     prefix="/admin",
@@ -14,15 +15,33 @@ router = APIRouter(
     dependencies=[Depends(JWTBearerAdmin())]
 )
 
-@router.get("/acc", response_model=ResponseSchema, response_model_exclude_none=True)
-async def get_user_profile(credentials: HTTPAuthorizationCredentials = Security(JWTBearerAdmin())):
-    token = JWTRepo.extract_token(credentials)
-    r1 = await UserService.find_account(token['username'])
-    print(r1.id)
-    result = await role_service.find_role_by_user_id(r1.id)
-    return ResponseSchema(detail="Successfully fetch data!", result=result)
 
 @router.post("/register", response_model=ResponseSchema, response_model_exclude_none=True)
 async def register(request_body: RegisterSchema):
     await AuthService.register_service(request_body)
     return ResponseSchema(detail="Successfully save data!")
+
+@router.post("/forgot-password", response_model=ResponseSchema, response_model_exclude_none=True)
+async def forgot_password(request_body: ForgotPasswordSchema):
+    await AuthService.forgot_password_service(request_body)
+    return ResponseSchema(detail="Successfully update data!")
+
+@router.get("/chage-status-infoData/{stt}")
+async def chageStatusInfoData(stt):
+    return await info_data_service.InFoDataService.update_status_downloadable(stt,False,False)
+
+@router.get("/delete-infoData/{uploadTimeStr}")
+async def deleteinfodata(uploadTimeStr):
+    return await info_data_service.InFoDataService.delete_by_str()
+
+@router.get("/find-infoData/{uploadTimeStr}")
+async def findInfoData(uploadTimeStr):
+    return await info_data_service.InFoDataService.find_by_str(uploadTimeStr)
+
+@router.get("/find-by-status/{status}")
+async def findstatus(status):
+    return await info_data_service.InFoDataService.find_by_status(status)
+
+@router.get("/get-all-account/")
+async def getallaccount():
+    return await UserService.find_account_all()

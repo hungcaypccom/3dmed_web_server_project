@@ -24,3 +24,5 @@ class UsersRepository(BaseRepo):
             password=password).execution_options(synchronize_session="fetch")
         await db.execute(query)
         await commit_rollback()
+
+   

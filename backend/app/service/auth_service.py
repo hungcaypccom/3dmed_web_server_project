@@ -59,6 +59,8 @@ class AuthService:
             await UsersRepository.create(**_users.dict())
             await UsersRoleRepository.create(**_users_role.dict())
 
+
+
     @staticmethod
     async def logins_service(login: LoginSchema):
         _username = await UsersRepository.find_by_username(login.username)

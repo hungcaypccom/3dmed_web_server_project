@@ -4,17 +4,30 @@ from app.config import db
 from app.service import auth_service, user_service, role_service, info_data_service, person_service
 from app.hans3d import han3d_service
 from app.auto_download.auto_download_service import AutoDownloadService
+from app.auto_download import config as AutoDownloadConfig
 from datetime import date
 from app.service.auth_service import AuthService
 from app.schema import RegisterSchema
+from app.client_download import client_download
+import time
+import asyncio
+from pathlib import Path
+from fastapi import HTTPException
+from fastapi import FastAPI, Response, status
+
+
+from fastapi import FastAPI
+from aiohttp import web
+from app.client_download import config
+
 
 router = APIRouter()
 import json
 
-admin = RegisterSchema(
-    username= "admin1",
+admin_reg = RegisterSchema(
+    username= "admin",
     password= "admin",
-    name= "admin",
+    name= "admin2",
     Date_start= "23-01-2023",
     Date_end= "23-10-2023",
     profile= "str",
@@ -23,7 +36,20 @@ admin = RegisterSchema(
     role= "admin"
 )
 
+datafolder = "datas"
+name= "20221212172841377"
 
+async def auto_compare():
+    while True:
+        await AutoDownloadService.auto_login()
+        await AutoDownloadService.sync_infoData()
+        await asyncio.sleep(AutoDownloadConfig.interval_compare_infoData) 
+
+async def auto_download():
+    while True:
+        await AutoDownloadService.download()
+        await asyncio.sleep(AutoDownloadConfig.interval_download) 
+        
 
 def init_app():
     db.init()
@@ -38,8 +64,11 @@ def init_app():
     async def startup():
         await db.create_all()
         await AuthService.generate_role()
-        #await AuthService.register_service(admin)
-        return admin
+        #await AuthService.register_service(admin_reg)
+        task1 = asyncio.create_task(auto_compare())
+        task2 = asyncio.create_task(auto_download())
+        asyncio.gather(task1, task2)
+       
 
         
 
@@ -142,19 +171,12 @@ async def f():
 async def f():
     return await AutoDownloadService.auto_login()"""
 
-@router.get("/sync")
-async def f():
-    return await AutoDownloadService.sync_infoData()
 
-@router.get("/downloaddata")
-async def f():
-    return await AutoDownloadService.download()
-
-#test autodownload
+"""#test autodownload
 @router.get("/test")
 async def f():
     return await AuthService.register_service(admin)
-
+"""
 app.include_router(router)
 
 

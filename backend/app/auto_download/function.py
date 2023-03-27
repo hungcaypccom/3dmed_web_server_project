@@ -43,7 +43,7 @@ class Function:
                     "birthday" : infoData["birthday"], 
                     "phone" : infoData["phone"], 
                     "sex" : infoData["sex"],
-                    "status": False,
+                    "status": True,
                     "downloadable": False
                 }
                 await Function.write_infoData_by_account(data = data, account= account)
@@ -65,7 +65,7 @@ class Function:
                 }
                 await Function.write_infoData_by_account(data = dataUpdate, account= account)
             else:
-                print ("khong download gi ca")
+                print ("khong co data moi")
            
 
        
