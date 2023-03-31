@@ -6,6 +6,8 @@ from fastapi import FastAPI
 import pickle
 import time
 
+#config for API form hans's server
+
 class Config:
 
     URL_login = "http://47.243.175.209:8080/EX-PRO/accLogin"
@@ -22,11 +24,13 @@ class Config:
     "uploadTimeStr": "uploadTimeStr"
     }
 
+# account to logging
     loginAccount = {
         "account": "994985849",
         "password": "d33314f30983215c29c2af0c1bcd2b43",
         "accessSource": "pc"
     }
 
+# indicating the path to storge data downloaded, must be same with the config file of client_download module
     datafolder = "datas"
 

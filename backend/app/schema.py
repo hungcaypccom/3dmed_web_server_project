@@ -43,6 +43,15 @@ class UpdateSchema(BaseModel):
     phone_number: str
     adress: str
    
+class UpdateUserSchema(BaseModel):
+
+    # mapping request data to class entity table  
+    old_password: str  
+    new_password: str
+    name: str
+    profile: str
+    phone_number: str
+    adress: str
 
 class LoginSchema(BaseModel):
     username: str
@@ -63,3 +72,8 @@ class DetailSchema(BaseModel):
 class ResponseSchema(BaseModel):
     detail: str
     result: Optional[T] = None
+
+
+class DeleteDataListSchema(BaseModel):
+    dataList = list[str]
+

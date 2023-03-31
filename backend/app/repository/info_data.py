@@ -2,9 +2,8 @@
 from multiprocessing import synchronize
 from sqlalchemy import update as sql_update
 from sqlalchemy.future import select
-from sqlalchemy import update as sql_update, delete as sql_delete
+from sqlalchemy import update as sql_update, delete as sql_delete, func
 from app.config import db, commit_rollback
-
 
 from app.config import db, commit_rollback
 from app.model.info_data import InfoData
@@ -50,4 +49,15 @@ class InfoDataRepository(BaseRepo):
         await db.execute(query)
         await commit_rollback()
 
-   
+    @staticmethod
+    async def find_by_user_id_total_count(user_id, downloadable:bool):
+        if downloadable == True:
+            query =  select(func.count(InfoData.id)).where(InfoData.user_id == user_id , InfoData.downloadable == downloadable)
+        else:
+            query =  select(func.count(InfoData.id)).where(InfoData.user_id == user_id)
+        return (await db.execute(query)).scalar()
+                
+    async def find_by_user_id_pagging(user_id, page, count, downloadable:bool):
+        skip = count * (page - 1)
+        query = select(InfoData).where(InfoData.user_id == user_id , InfoData.downloadable == downloadable).offset(skip).limit(count)
+        return (await db.execute(query)).scalars().all()

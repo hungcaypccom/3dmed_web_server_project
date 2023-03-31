@@ -10,7 +10,7 @@ from jose import ExpiredSignatureError, JWTError
 
 from jose.exceptions import ExpiredSignatureError, JWSError, JWTClaimsError
 
-from app.config import SECRET_KEY, ALGORITHM
+from app.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, ACCESS_TOKEN_EXPIRE_DAYS, ACCESS_TOKEN_EXPIRE_YEARS, ACCESS_TOKEN_EXPIRE_TYPE
 
 
 class JWTRepo:
@@ -21,11 +21,19 @@ class JWTRepo:
 
     def generate_token(self, expires_delta: Optional[timedelta] = None):
         to_encode = self.data.copy()
-        if expires_delta:
+        if expires_delta :
             expire = datetime.utcnow() + expires_delta
+        elif ACCESS_TOKEN_EXPIRE_TYPE == "DAYS":
+            expire = datetime.utcnow() + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
+            to_encode.update({"exp": expire})
+        elif ACCESS_TOKEN_EXPIRE_TYPE == "YEARS":
+            expire = datetime.utcnow() + timedelta(year=ACCESS_TOKEN_EXPIRE_YEARS)
+            to_encode.update({"exp": expire})
+        elif ACCESS_TOKEN_EXPIRE_TYPE == "MINUTES":
+            expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            to_encode.update({"exp": expire})
         else:
-            expire = datetime.utcnow() + timedelta(minutes=15)
-        to_encode.update({"exp": expire})
+            to_encode.update()
         encode_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
         return encode_jwt

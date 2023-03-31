@@ -50,3 +50,13 @@ class InFoDataService:
     @staticmethod  
     async def update_status_downloadable(uploadTimeStr, status, downloadable):
         return await InfoDataRepository.update_status_downloadable(uploadTimeStr, status, downloadable)
+    
+    @staticmethod
+    async def find_by_user_total_count(account: str, downloadable: bool):
+        acc = await UserService.find_account(account)
+        return await InfoDataRepository.find_by_user_id_total_count(acc.id, downloadable)
+    
+    @staticmethod
+    async def find_by_user_pagging(account: str, page:int, count:int, downloadable:bool):
+        acc = await UserService.find_account(account)
+        return await InfoDataRepository.find_by_user_id_pagging(acc.id,page,count,downloadable)

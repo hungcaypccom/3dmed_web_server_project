@@ -2,11 +2,18 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
+#config database: "postgresql+asyncpg://user:password@host:port/database"
 DB_CONFIG = f"postgresql+asyncpg://postgres:1234567890@localhost:5432/test"
+
 
 SECRET_KEY = "3DmedVN23"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_DAYS = 7
+ACCESS_TOKEN_EXPIRE_YEARS = 1
+
+#CHOICE: MINUTES, DAYS, YEARS, NONE = NEVER EXPIRE
+ACCESS_TOKEN_EXPIRE_TYPE = "DAYS"
 
 class AsyncDatabaseSession:
 
