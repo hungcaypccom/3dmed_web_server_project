@@ -44,6 +44,10 @@ class InFoDataService:
         return await InfoDataRepository.find_by_status(status)
     
     @staticmethod  
+    async def find_by_downloadable(downloadable):
+        return await InfoDataRepository.find_by_downloadable(downloadable)
+    
+    @staticmethod  
     async def delete_by_str(uploadTimeStr):
         return await InfoDataRepository.delete_by_uploadTimeStr(uploadTimeStr)
     

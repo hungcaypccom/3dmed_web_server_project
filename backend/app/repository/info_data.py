@@ -58,6 +58,9 @@ class InfoDataRepository(BaseRepo):
         return (await db.execute(query)).scalar()
                 
     async def find_by_user_id_pagging(user_id, page, count, downloadable:bool):
-        skip = count * (page - 1)
-        query = select(InfoData).where(InfoData.user_id == user_id , InfoData.downloadable == downloadable).offset(skip).limit(count)
+        if downloadable == True:
+            skip = count * (page - 1)
+            query = select(InfoData).where(InfoData.user_id == user_id , InfoData.downloadable == downloadable).offset(skip).limit(count)
+        else:
+            query = select(InfoData).where(InfoData.user_id == user_id).offset(skip).limit(count)
         return (await db.execute(query)).scalars().all()
