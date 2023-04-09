@@ -20,6 +20,9 @@ jose = "^1.0.0"
 passlib = "^1.7.4"
 python-jose = "^3.3.0"
 bcrypt = "^4.0.1"
+fastapi-csrf-protect = "^0.2.2"
+fastapi-limiter = "^0.1.5"
+aioredis = "^2.0.1"
 
  
 [build-system]

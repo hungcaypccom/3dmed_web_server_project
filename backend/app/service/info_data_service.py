@@ -52,6 +52,10 @@ class InFoDataService:
         return await InfoDataRepository.delete_by_uploadTimeStr(uploadTimeStr)
     
     @staticmethod  
+    async def delete_by_all():
+        return await InfoDataRepository.delete_all()
+    
+    @staticmethod  
     async def update_status_downloadable(uploadTimeStr, status, downloadable):
         return await InfoDataRepository.update_status_downloadable(uploadTimeStr, status, downloadable)
     
@@ -59,8 +63,18 @@ class InFoDataService:
     async def find_by_user_total_count(account: str, downloadable: bool):
         acc = await UserService.find_account(account)
         return await InfoDataRepository.find_by_user_id_total_count(acc.id, downloadable)
+    @staticmethod
+    async def find_by_user_id_2_last(account, limit):
+        #acc = await UserService.find_account(account)
+        return await InfoDataRepository.find_by_user_id_2_last(account,limit)
     
     @staticmethod
     async def find_by_user_pagging(account: str, page:int, count:int, downloadable:bool):
         acc = await UserService.find_account(account)
-        return await InfoDataRepository.find_by_user_id_pagging(acc.id,page,count,downloadable)
+        try:
+            return await InfoDataRepository.find_by_user_id_pagging(acc.id,page,count,downloadable)
+        except Exception as er:
+            print(er)
+            raise HTTPException(
+                status_code=400, detail={"status": "Bad request", "message": "Database errors"}
+            )

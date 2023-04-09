@@ -28,6 +28,7 @@ class RegisterSchema(BaseModel):
     phone_number: str
     adress: str
     role: str
+    source: str
    
     # phone number validation
 
@@ -46,20 +47,22 @@ class UpdateSchema(BaseModel):
 class UpdateUserSchema(BaseModel):
 
     # mapping request data to class entity table  
-    old_password: str  
-    new_password: str
-    name: str
-    profile: str
-    phone_number: str
-    adress: str
+        name: str
+        profile: str
+        phone_number: str
+        adress: str
+  
 
 class LoginSchema(BaseModel):
     username: str
     password: str
 
-
 class ForgotPasswordSchema(BaseModel):
     username: str
+    new_password: str
+
+class ForgotPasswordSchemaUser(BaseModel):
+    old_password: str
     new_password: str
 
 
@@ -68,9 +71,12 @@ class DetailSchema(BaseModel):
     message: str
     result: Optional[T] = None
 
+"""class ResponseSchema(BaseModel):
+    detail : str
+    result: Optional[T] = None"""
 
 class ResponseSchema(BaseModel):
-    detail: str
+    detail: dict
     result: Optional[T] = None
 
 

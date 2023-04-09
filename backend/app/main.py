@@ -1,28 +1,22 @@
 import uvicorn
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends
 from app.config import db
 from app.service import auth_service, user_service, role_service, info_data_service, person_service
-from app.hans3d import han3d_service
 from app.auto_download.auto_download_service import AutoDownloadService
 from app.auto_download import config as AutoDownloadConfig
 from datetime import date
 from app.service.auth_service import AuthService
 from app.schema import RegisterSchema
-from app.client_download import client_download
-import time
 import asyncio
-from pathlib import Path
-from fastapi import HTTPException
-from fastapi import FastAPI, Response, status
-
-
 from fastapi import FastAPI
-from aiohttp import web
-from app.client_download import config
+from fastapi import FastAPI
+from fastapi_limiter.depends import RateLimiter
+
+
 
 
 router = APIRouter()
-import json
+
 
 admin_reg = RegisterSchema(
     username= "admin",
@@ -33,7 +27,8 @@ admin_reg = RegisterSchema(
     profile= "str",
     phone_number= "str",
     adress= "str",
-    role= "admin"
+    role= "admin",
+    source= "3dmded"
 )
 
 datafolder = "datas"
@@ -64,7 +59,11 @@ def init_app():
     async def startup():
         await db.create_all()
         await AuthService.generate_role()
-
+     
+       
+       
+       
+        #await FastAPILimiter.init(redis)
         #uncomment below line for the first time running - tocreate admin account
         #await AuthService.register_service(admin_reg)
 
@@ -74,12 +73,14 @@ def init_app():
         - after created admin account, uncommnent 3 lines belows and comment the line above to not creating admin account
         - then restart running server """
 
-        #task1 = asyncio.create_task(auto_compare())
+        task1 = asyncio.create_task(auto_compare())
         #task2 = asyncio.create_task(auto_download())
-        #asyncio.gather(task1, task2)"""
-       
+        asyncio.gather(task1)
+    
+  
+   
+    
 
-        
 
     @app.on_event("shutdown")
     async def shutdown():
@@ -94,8 +95,22 @@ def init_app():
     
 
 
+@router.post("/delete")
+async def delete():
+    await info_data_service.InFoDataService.delete_by_all()
+
+
+@router.post("/find")
+async def find():
+    return await info_data_service.InFoDataService.find_by_user_id_2_last("994985849",3)
+
+
+
 app = init_app()
 app.include_router(router)
+
+
+
 
 def start():
     #Lauched with 'poetry run start' at root level

@@ -26,4 +26,22 @@ class UsersRepository(BaseRepo):
         await db.execute(query)
         await commit_rollback()
 
-   
+    @staticmethod
+    async def update_refresh_token(username: str, token: str):
+        query = sql_update(Users).where(Users.username == username).values(
+            rf_tocken=token).execution_options(synchronize_session="fetch")
+        await db.execute(query)
+        await commit_rollback()
+
+
+    @staticmethod
+    async def update_source(username: str, source: str):
+        query = sql_update(Users).where(Users.username == username).values(
+            source=source).execution_options(synchronize_session="fetch")
+        await db.execute(query)
+        await commit_rollback()
+
+    @staticmethod
+    async def find_by_source(source: str):  
+        query = select(Users).where(Users.source == source)
+        return (await db.execute(query)).scalars().all()

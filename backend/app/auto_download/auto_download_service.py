@@ -16,20 +16,26 @@ class AutoDownloadService:
 
     @staticmethod
     async def sync_infoData():
-        accounts = await function.Function.get_all_account()
-        tasks = []
-        for account in accounts:
-            task = asyncio.create_task(function.Function.sync_infoData(account.username, config.timeout_request_data*len(accounts)))
-            tasks.append(task)
+        try:
+            accounts = await function.Function.get_all_account()
+            tasks = []
+            for account in accounts:
+                print(f'{account.username}')
+                task = asyncio.create_task(function.Function.sync_infoData(account.username, config.timeout_request_data*len(accounts)))
+                tasks.append(task)
             await asyncio.gather(*tasks)
+        except Exception as e:
+            print("Error occurred: ", e)
         
     @staticmethod
     async def download():
-        downloads = await function.Function.find_infoData_by_status(False)
-        for download in downloads:
-            if await function.Function.download_by_uploadTimeStr(download.uploadTimeStr, download.accountNo, config.timeout_download_data):
-               await info_data_service.InFoDataService.update_status_downloadable(download.uploadTimeStr,True,True)
-
+        try:
+            downloads = await function.Function.find_infoData_by_status(False)
+            for download in downloads:
+                if await function.Function.download_by_uploadTimeStr(download.uploadTimeStr, download.accountNo, config.timeout_download_data):
+                    await info_data_service.InFoDataService.update_status_downloadable(download.uploadTimeStr,True,True)
+        except Exception as e:
+                print("Error occurred: ", e)
    
             
 

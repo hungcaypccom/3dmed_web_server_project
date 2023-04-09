@@ -2,7 +2,7 @@
 from multiprocessing import synchronize
 from sqlalchemy import update as sql_update
 from sqlalchemy.future import select
-from sqlalchemy import update as sql_update, delete as sql_delete, func
+from sqlalchemy import update as sql_update, delete as sql_delete, func, desc
 from app.config import db, commit_rollback
 
 from app.config import db, commit_rollback
@@ -18,7 +18,7 @@ class InfoDataRepository(BaseRepo):
         query = select(InfoData).where(InfoData.uploadTimeStr == uploadTimeStr)
         return (await db.execute(query)).scalar_one_or_none()
   
-
+    
     @staticmethod
     async def find_by_user_id(user_id):
         query = select(InfoData).where(InfoData.user_id == user_id)
@@ -60,7 +60,12 @@ class InfoDataRepository(BaseRepo):
     async def find_by_user_id_pagging(user_id, page, count, downloadable:bool):
         if downloadable == True:
             skip = count * (page - 1)
-            query = select(InfoData).where(InfoData.user_id == user_id , InfoData.downloadable == downloadable).offset(skip).limit(count)
+            query = select(InfoData).where(desc(InfoData.user_id == user_id , InfoData.downloadable == downloadable)).offset(skip).limit(count)
         else:
+            skip = count * (page - 1)
             query = select(InfoData).where(InfoData.user_id == user_id).offset(skip).limit(count)
+        return (await db.execute(query)).scalars().all()
+    
+    async def find_by_user_id_2_last(username, count):
+        query = select(InfoData).order_by((InfoData.created_at).desc()).filter(InfoData.accountNo==username).limit(count)
         return (await db.execute(query)).scalars().all()
