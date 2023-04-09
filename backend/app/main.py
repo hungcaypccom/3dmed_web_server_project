@@ -92,17 +92,6 @@ def init_app():
     app.include_router(users.router)
     app.include_router(admin.router)
     return app
-    
-
-
-@router.post("/delete")
-async def delete():
-    await info_data_service.InFoDataService.delete_by_all()
-
-
-@router.post("/find")
-async def find():
-    return await info_data_service.InFoDataService.find_by_user_id_2_last("994985849",3)
 
 
 
