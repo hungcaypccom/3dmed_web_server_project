@@ -7,7 +7,7 @@ class Function:
     @staticmethod
     async def find_infoData_by_account(account:str):
         try: 
-            return await InFoDataService.find_by_user_id_2_last(account, 2)
+            return await InFoDataService.find_by_user_id_2_last(account, 1)
         except:
             print(f'{account}: null data')
     
@@ -52,8 +52,7 @@ class Function:
                 await Function.write_infoData_by_account(data = data, account= account)
         else:
             lastInfoData = (infoDatas[-1])
-            lastInfoDataBase = dict(infoDataBase[0])
-            if(lastInfoData["uploadTimeStr"]!=lastInfoDataBase["uploadTimeStr"]): 
+            if(lastInfoData["uploadTimeStr"]!=infoDataBase[0]): 
                 dataUpdate = {
                     "accountNo" : lastInfoData["accountNo"], 
                     "uploadTimeStr" : lastInfoData["uploadTimeStr"], 

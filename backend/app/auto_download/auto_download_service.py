@@ -9,10 +9,13 @@ class AutoDownloadService:
     @staticmethod
     async def auto_login():
         status = await Service.login(config.timeout_request_data)
-        if status["status"] == 2002:
-            await Service.reset(config.timeout_request_data)
-            await Service.takeCookies()
-            return await Service.login(config.timeout_request_data)
+        try:
+            if status["status"] != 200:
+                await Service.reset(config.timeout_request_data)
+                await Service.takeCookies()
+                return await Service.login(config.timeout_request_data)
+        except Exception as e:
+            print("Error occurred in auto_login:", e)
 
     @staticmethod
     async def sync_infoData():
@@ -25,7 +28,9 @@ class AutoDownloadService:
                 tasks.append(task)
             await asyncio.gather(*tasks)
         except Exception as e:
-            print("Error occurred: ", e)
+            print("Error occurred in sync_infoData:", e)
+
+
         
     @staticmethod
     async def download():
@@ -35,7 +40,7 @@ class AutoDownloadService:
                 if await function.Function.download_by_uploadTimeStr(download.uploadTimeStr, download.accountNo, config.timeout_download_data):
                     await info_data_service.InFoDataService.update_status_downloadable(download.uploadTimeStr,True,True)
         except Exception as e:
-                print("Error occurred: ", e)
+                print("Error occurred in download:", e)
    
             
 

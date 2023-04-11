@@ -50,22 +50,23 @@ class InfoDataRepository(BaseRepo):
         await commit_rollback()
 
     @staticmethod
-    async def find_by_user_id_total_count(user_id, downloadable:bool):
+    async def find_by_user_id_total_count(username, downloadable:bool):
         if downloadable == True:
-            query =  select(func.count(InfoData.id)).where(InfoData.user_id == user_id , InfoData.downloadable == downloadable)
+            query =  select(func.count(InfoData.id)).where(InfoData.accountNo==username  , InfoData.downloadable == downloadable)
         else:
-            query =  select(func.count(InfoData.id)).where(InfoData.user_id == user_id)
+            query =  select(func.count(InfoData.id)).where(InfoData.accountNo==username)
         return (await db.execute(query)).scalar()
                 
-    async def find_by_user_id_pagging(user_id, page, count, downloadable:bool):
+    async def find_by_user_id_pagging(username, page, count, downloadable:bool):
         if downloadable == True:
             skip = count * (page - 1)
-            query = select(InfoData).where(desc(InfoData.user_id == user_id , InfoData.downloadable == downloadable)).offset(skip).limit(count)
+            query = select(InfoData).order_by((InfoData.created_at).desc()).filter(InfoData.downloadable == downloadable,InfoData.accountNo==username ).offset(skip).limit(count)
         else:
             skip = count * (page - 1)
-            query = select(InfoData).where(InfoData.user_id == user_id).offset(skip).limit(count)
+            query = select(InfoData).order_by((InfoData.created_at).desc()).filter(InfoData.accountNo==username ).offset(skip).limit(count)
+            #query = select(InfoData).where(InfoData.accountNo == username).offset(skip).limit(count)
         return (await db.execute(query)).scalars().all()
     
     async def find_by_user_id_2_last(username, count):
-        query = select(InfoData).order_by((InfoData.created_at).desc()).filter(InfoData.accountNo==username).limit(count)
+        query = select(InfoData.uploadTimeStr).order_by((InfoData.created_at).desc()).filter(InfoData.accountNo==username).limit(count)
         return (await db.execute(query)).scalars().all()

@@ -61,8 +61,8 @@ class InFoDataService:
     
     @staticmethod
     async def find_by_user_total_count(account: str, downloadable: bool):
-        acc = await UserService.find_account(account)
-        return await InfoDataRepository.find_by_user_id_total_count(acc.id, downloadable)
+        #acc = await UserService.find_account(account)
+        return await InfoDataRepository.find_by_user_id_total_count(account, downloadable)
     @staticmethod
     async def find_by_user_id_2_last(account, limit):
         #acc = await UserService.find_account(account)
@@ -70,9 +70,9 @@ class InFoDataService:
     
     @staticmethod
     async def find_by_user_pagging(account: str, page:int, count:int, downloadable:bool):
-        acc = await UserService.find_account(account)
+        #acc = await UserService.find_account(account)
         try:
-            return await InfoDataRepository.find_by_user_id_pagging(acc.id,page,count,downloadable)
+            return await InfoDataRepository.find_by_user_id_pagging(account,page,count,downloadable)
         except Exception as er:
             print(er)
             raise HTTPException(
