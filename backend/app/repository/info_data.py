@@ -58,14 +58,17 @@ class InfoDataRepository(BaseRepo):
         return (await db.execute(query)).scalar()
                 
     async def find_by_user_id_pagging(username, page, count, downloadable:bool):
-        if downloadable == True:
-            skip = count * (page - 1)
-            query = select(InfoData).order_by((InfoData.created_at).desc()).filter(InfoData.downloadable == downloadable,InfoData.accountNo==username ).offset(skip).limit(count)
-        else:
-            skip = count * (page - 1)
-            query = select(InfoData).order_by((InfoData.created_at).desc()).filter(InfoData.accountNo==username ).offset(skip).limit(count)
+        try:
+            if downloadable == True:
+                skip = count * (page - 1)
+                query = select(InfoData).order_by((InfoData.created_at).desc()).filter(InfoData.downloadable == downloadable,InfoData.accountNo==username ).offset(skip).limit(count)
+            else:
+                skip = count * (page - 1)
+                query = select(InfoData).order_by((InfoData.created_at).desc()).filter(InfoData.accountNo==username ).offset(skip).limit(count)
             #query = select(InfoData).where(InfoData.accountNo == username).offset(skip).limit(count)
-        return (await db.execute(query)).scalars().all()
+            return (await db.execute(query)).scalars().all()
+        except Exception as e:
+            print("error in find_by_user_id_pagging", e)
     
     async def find_by_user_id_2_last(username, count):
         query = select(InfoData.uploadTimeStr).order_by((InfoData.created_at).desc()).filter(InfoData.accountNo==username).limit(count)

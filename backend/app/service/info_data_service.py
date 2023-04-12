@@ -71,6 +71,10 @@ class InFoDataService:
     @staticmethod
     async def find_by_user_pagging(account: str, page:int, count:int, downloadable:bool):
         #acc = await UserService.find_account(account)
+        if page <=0:
+            raise HTTPException(
+                status_code=400, detail={"status": "Bad request", "message": "Database errors"}
+            )
         try:
             return await InfoDataRepository.find_by_user_id_pagging(account,page,count,downloadable)
         except Exception as er:

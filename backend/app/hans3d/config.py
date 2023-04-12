@@ -26,8 +26,8 @@ class Config:
 
 # account to logging
     loginAccount = {
-        "account": "994985849",
-        "password": "d33314f30983215c29c2af0c1bcd2b43",
+        "account": "191573222",
+        "password": "e88b37af3c8c86ef15a267ee994be968",
         "accessSource": "pc"
     }
 
